@@ -20,7 +20,7 @@ end
 
 package_url = "#{node['tez']['url']}"
 base_package_filename = File.basename(package_url)
-cached_package_filename = "/tmp/#{base_package_filename}"
+cached_package_filename = "#{Chef::Config['file_cache_path']}/#{base_package_filename}"
 
 remote_file cached_package_filename do
   source package_url
@@ -37,9 +37,9 @@ bash 'extract-tez' do
         group node['tez']['group']
         code <<-EOH
                 set -e
-                mkdir /tmp/apache-tez-#{node['tez']['version']}
-                tar zxf #{cached_package_filename} -C /tmp/apache-tez-#{node['tez']['version']}
-                mv /tmp/apache-tez-#{node['tez']['version']} #{node['tez']['dir']}
+                mkdir #{Chef::Config['file_cache_path']}/apache-tez-#{node['tez']['version']}
+                tar zxf #{cached_package_filename} -C #{Chef::Config['file_cache_path']}/apache-tez-#{node['tez']['version']}
+                mv #{Chef::Config['file_cache_path']}/apache-tez-#{node['tez']['version']} #{node['tez']['dir']}
                 # remove old symbolic link, if any
                 rm -f #{node['tez']['base_dir']}
                 ln -s #{node['tez']['home']} #{node['tez']['base_dir']}

@@ -21,7 +21,7 @@ end
 
 package_url = "#{node['hive']['url']}"
 base_package_filename = File.basename(package_url)
-cached_package_filename = "/tmp/#{base_package_filename}"
+cached_package_filename = "#{Chef::Config['file_cache_path']}/#{base_package_filename}"
 
 file cached_package_filename do
   action :delete
@@ -30,7 +30,7 @@ end
 
 package_url = "#{node['tez']['url']}"
 base_package_filename = File.basename(package_url)
-cached_package_filename = "/tmp/#{base_package_filename}"
+cached_package_filename = "#{Chef::Config['file_cache_path']}/#{base_package_filename}"
 
 file cached_package_filename do
   action :delete

@@ -20,7 +20,7 @@ end
 
 package_url = "#{node['slider']['url']}"
 base_package_filename = File.basename(package_url)
-cached_package_filename = "/tmp/#{base_package_filename}"
+cached_package_filename = "#{Chef::Config['file_cache_path']}/#{base_package_filename}"
 
 remote_file cached_package_filename do
   source package_url
@@ -37,8 +37,8 @@ bash 'extract-slider' do
         group node['slider']['group']
         code <<-EOH
                 set -e
-                tar zxf #{cached_package_filename} -C /tmp
-                mv /tmp/slider-#{node['slider']['version']} #{node['slider']['home']}
+                tar zxf #{cached_package_filename} -C #{Chef::Config['file_cache_path']}
+                mv #{Chef::Config['file_cache_path']}/slider-#{node['slider']['version']} #{node['slider']['home']}
                 # remove old symbolic link, if any
                 rm -f #{node['slider']['base_dir']}
                 ln -s #{node['slider']['home']} #{node['slider']['base_dir']}

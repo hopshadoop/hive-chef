@@ -35,7 +35,7 @@ end
 
 package_url = "#{node['hive2']['url']}"
 base_package_filename = File.basename(package_url)
-cached_package_filename = "/tmp/#{base_package_filename}"
+cached_package_filename = "#{Chef::Config['file_cache_path']}/#{base_package_filename}"
 
 remote_file cached_package_filename do
   source package_url
@@ -52,8 +52,8 @@ bash 'extract-hive' do
         group node['hive2']['group']
         code <<-EOH
                 set -e
-                tar zxf #{cached_package_filename} -C /tmp
-                mv /tmp/apache-hive-#{node['hive2']['version']}-bin #{node['hive2']['dir']}
+                tar zxf #{cached_package_filename} -C #{Chef::Config['file_cache_path']}
+                mv #{Chef::Config['file_cache_path']}/apache-hive-#{node['hive2']['version']}-bin #{node['hive2']['dir']}
                 # remove old symbolic link, if any
                 rm -f #{node['hive2']['base_dir']}
                 ln -s #{node['hive2']['home']} #{node['hive2']['base_dir']}
